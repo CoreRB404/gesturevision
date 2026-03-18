@@ -138,8 +138,8 @@ class GestureAccessibilityService : AccessibilityService() {
 
         val centerX = screenWidth / 2f
         val centerY = screenHeight / 2f
-        val swipeDistance = screenWidth * 0.4f
-        val verticalDistance = screenHeight * 0.3f
+        val swipeDistance = screenWidth * 0.7f
+        val verticalStart = screenHeight * 0.8f; val verticalEnd = screenHeight * 0.2f
 
         val path = Path()
         var emoji = ""
@@ -159,14 +159,14 @@ class GestureAccessibilityService : AccessibilityService() {
                 label = "Pinky → Left"
             }
             "up" -> {
-                path.moveTo(centerX, centerY + verticalDistance / 2)
-                path.lineTo(centerX, centerY - verticalDistance / 2)
+                path.moveTo(centerX, verticalStart)
+                path.lineTo(centerX, verticalEnd)
                 emoji = "✌️"
                 label = "Peace → Up"
             }
             "down" -> {
-                path.moveTo(centerX, centerY - verticalDistance / 2)
-                path.lineTo(centerX, centerY + verticalDistance / 2)
+                path.moveTo(centerX, verticalEnd)
+                path.lineTo(centerX, verticalStart)
                 emoji = "☝️"
                 label = "Point → Down"
             }
@@ -177,7 +177,7 @@ class GestureAccessibilityService : AccessibilityService() {
         showGestureNotification(emoji, label, direction)
 
         val gesture = GestureDescription.Builder()
-            .addStroke(GestureDescription.StrokeDescription(path, 0, 300))
+            .addStroke(GestureDescription.StrokeDescription(path, 0, 450))
             .build()
 
         return dispatchGesture(gesture, object : GestureResultCallback() {
