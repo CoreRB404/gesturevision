@@ -27,9 +27,6 @@
       "permissions": [
         "CAMERA",
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
-        "CAMERA",
-        "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.anonymous.GestureVisionApp"
@@ -44,6 +41,12 @@
           "cameraPermission": "GestureVision needs camera access to detect hand gestures for contactless navigation."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ea37164c-8dd1-4b5d-afb3-d191e0c6c0d3"
+      }
+    },
+    "owner": "robocop123"
   }
 }
