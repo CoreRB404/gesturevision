@@ -6,7 +6,7 @@
  * will perform REAL swipes on the Android screen.
  */
 
-import { NativeModules, Platform } from 'react-native';
+import { NativeModules, Platform, Alert } from 'react-native';
 import { classifyGesture, detectSwipe, resetSwipeTracking } from './gestureClassifier';
 
 const { GestureControl } = NativeModules;
@@ -51,10 +51,18 @@ export async function checkAccessibility() {
  * Open Android Accessibility Settings.
  */
 export async function openAccessibilitySettings() {
-  if (Platform.OS !== 'android' || !GestureControl) return;
+  if (Platform.OS !== 'android') {
+    Alert.alert('Error', 'Not supported on this platform');
+    return;
+  }
+  if (!GestureControl) {
+    Alert.alert('Native Module Error', 'GestureControl module is null. The native code is not linked correctly.');
+    return;
+  }
   try {
     await GestureControl.openAccessibilitySettings();
   } catch (e) {
+    Alert.alert('Settings Error', e.message || 'Could not open settings');
     console.log('[GestureDetector] Could not open settings:', e);
   }
 }
@@ -120,21 +128,30 @@ export async function canDrawOverlays() {
 }
 
 export async function requestOverlayPermission() {
-  if (Platform.OS !== 'android' || !GestureControl) return;
+  if (Platform.OS !== 'android') return;
+  if (!GestureControl) {
+    Alert.alert('Native Module Error', 'GestureControl module is null for Overlay request.');
+    return;
+  }
   try { await GestureControl.requestOverlayPermission(); }
-  catch (e) { console.log('[GestureDetector] Overlay permission error:', e); }
+  catch (e) { Alert.alert('Overlay Error', e.message); console.log('[GestureDetector] Overlay permission error:', e); }
 }
 
 export async function startOverlay() {
-  if (Platform.OS !== 'android' || !GestureControl) return false;
+  if (Platform.OS !== 'android') return false;
+  if (!GestureControl) {
+    Alert.alert('Native Module', 'GestureControl not found.');
+    return false;
+  }
   try { return await GestureControl.startOverlayService(); }
-  catch (e) { console.log('[GestureDetector] Start overlay error:', e); return false; }
+  catch (e) { Alert.alert('Start Overlay Error', e.message); console.log('[GestureDetector] Start overlay error:', e); return false; }
 }
 
 export async function stopOverlay() {
-  if (Platform.OS !== 'android' || !GestureControl) return false;
+  if (Platform.OS !== 'android') return false;
+  if (!GestureControl) return false;
   try { return await GestureControl.stopOverlayService(); }
-  catch (e) { return false; }
+  catch (e) { Alert.alert('Stop Overlay Error', e.message); return false; }
 }
 
 export async function isOverlayRunning() {
