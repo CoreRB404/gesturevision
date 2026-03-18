@@ -159,14 +159,17 @@ class GestureAccessibilityService : AccessibilityService() {
                 label = "Pinky → Left"
             }
             "up" -> {
-                path.moveTo(centerX, verticalStart)
-                path.lineTo(centerX, verticalEnd)
+                // Swipe on the right side of the screen to avoid center pause buttons in Reels/TikTok
+                val swipeX = screenWidth * 0.8f 
+                path.moveTo(swipeX, verticalStart)
+                path.lineTo(swipeX, verticalEnd)
                 emoji = "✌️"
                 label = "Peace → Up"
             }
             "down" -> {
-                path.moveTo(centerX, verticalEnd)
-                path.lineTo(centerX, verticalStart)
+                val swipeX = screenWidth * 0.8f
+                path.moveTo(swipeX, verticalEnd)
+                path.lineTo(swipeX, verticalStart)
                 emoji = "☝️"
                 label = "Point → Down"
             }
@@ -177,7 +180,8 @@ class GestureAccessibilityService : AccessibilityService() {
         showGestureNotification(emoji, label, direction)
 
         val gesture = GestureDescription.Builder()
-            .addStroke(GestureDescription.StrokeDescription(path, 0, 450))
+            // 100ms delay to register touch down, 600ms duration (a smooth drag)
+            .addStroke(GestureDescription.StrokeDescription(path, 100, 600))
             .build()
 
         return dispatchGesture(gesture, object : GestureResultCallback() {
